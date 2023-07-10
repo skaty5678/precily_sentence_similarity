@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Text Similarity App</title>
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var text1Dropdown = $("#text1-dropdown");
+            var text2Dropdown = $("#text2-dropdown");
+            var text1Input = $("#text1-input");
+            var text2Input = $("#text2-input");
+            var similarityScore = $("#similarity-score");
+
+            // Populate dropdowns with text options
+            $.ajax({
+                url: "/get_text_options",
+                type: "GET",
+                success: function(data) {
+                    $.each(data.text1, function(index, value) {
+                        text1Dropdown.append($("<option></option>").attr("value", value).text(value));
+                    });
+
+                    $.each(data.text2, function(index, value) {
+                        text2Dropdown.append($("<option></option>").attr("value", value).text(value));
+                    });
+                }
+            });
+
+            // Submit form and display similarity score
+            $("#similarity-form").submit(function(event) {
+                event.preventDefault();
+                var text1 = text1Input.val() || text1Dropdown.val();
+                var text2 = text2Input.val() || text2Dropdown.val();
+
+                if (!text1 || !text2) {
+                    similarityScore.text("Please provide the text to calculate score");
+                    return;
+                }
+
+                $.ajax({
+                    url: "/calculate_similarity",
+                    type: "POST",
+                    data: JSON.stringify({ "text1": text1, "text2": text2 }),
+                    contentType: "application/json",
+                    success: function(data) {
+                        similarityScore.text(data["similarity score"]);
+                    }
+                });
+            });
+
+            // Reset text inputs when dropdown option is selected
+            text1Dropdown.on("change", function() {
+                text1Input.val("");
+            });
+
+            text2Dropdown.on("change", function() {
+                text2Input.val("");
+            });
+
+            // Reset dropdown selection when text input is modified
+            text1Input.on("input", function() {
+                text1Dropdown.val("");
+            });
+
+            text2Input.on("input", function() {
+                text2Dropdown.val("");
+            });
+        });
+    </script>
+    <style>
+        body {
+            padding: 20px;
+        }
+        h1, h2 {
+            text-align: center;
+        }
+        form {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        select, input {
+            width: 300px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+        #similarity-score {
+            font-size: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Text Similarity App</h1>
+    <form id="similarity-form">
+        <label for="text1-dropdown">Text 1:</label>
+        <select id="text1-dropdown" name="text1">
+            <option value="">Select text 1</option>
+        </select>
+        <input type="text" id="text1-input" placeholder="Enter custom text" name="text1">
+        <br>
+        <label for="text2-dropdown">Text 2:</label>
+        <select id="text2-dropdown" name="text2">
+            <option value="">Select text 2</option>
+        </select>
+        <input type="text" id="text2-input" placeholder="Enter custom text" name="text2">
+        <br>
+        <button type="submit">Calculate Similarity</button>
+    </form>
+    <h2>Similarity Score:</h2>
+    <p id="similarity-score">0</p>
+</body>
+</html>

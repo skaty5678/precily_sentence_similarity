@@ -1,0 +1,7 @@
+torch
+torchvision
+torchaudio
+transformers
+sentence-transformers
+pandas
+Flask
