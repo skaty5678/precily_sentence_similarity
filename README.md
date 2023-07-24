@@ -29,3 +29,5 @@ This is a Flask-based API for calculating similarity scores between two sentence
 - pandas: A library for data manipulation and analysis.
 - sentence_transformers: A library for encoding sentences into embeddings using various transformer models.
 
+
+*index.html created with the help of chatgpt*
