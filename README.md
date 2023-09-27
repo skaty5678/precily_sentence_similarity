@@ -1,8 +1,6 @@
-# precily_sentence_similarity
+# precily_sentence_similarity_APP
 
-# Sentence Similarity API
-
-This is a Flask-based API for calculating similarity scores between two sentences using a Sentence Transformer model.
+This is a Flask-based APP for calculating similarity scores between two sentences using a Sentence Transformer model.
 
 ## Prerequisites
 
